@@ -13,18 +13,18 @@ from scipy.ndimage import gaussian_filter1d
 from skimage import io
 
 
-def write2video(results_dir, *video_list):
-    cat_video = None
+def write2video(results_dir, image_array):
+    # cat_video = None
+    #
+    # for video in video_list:
+    #     video_numpy = video[:, :3, :, :].cpu().float().detach().numpy()
+    #     video_numpy = (np.transpose(video_numpy, (0, 2, 3, 1)) + 1) / 2.0 * 255.0
+    #     video_numpy = video_numpy.astype(np.uint8)
+    #     cat_video = np.concatenate([cat_video, video_numpy], 2) if cat_video is not None else video_numpy
 
-    for video in video_list:
-        video_numpy = video[:, :3, :, :].cpu().float().detach().numpy()
-        video_numpy = (np.transpose(video_numpy, (0, 2, 3, 1)) + 1) / 2.0 * 255.0
-        video_numpy = video_numpy.astype(np.uint8)
-        cat_video = np.concatenate([cat_video, video_numpy], 2) if cat_video is not None else video_numpy
-
-    image_array = []
-    for i in range(cat_video.shape[0]):
-        image_array.append(cat_video[i])
+    # image_array = []
+    # for i in range(cat_video.shape[0]):
+    #     image_array.append(cat_video[i])
 
     if results_dir.endswith('.mp4'):
         out_name = results_dir

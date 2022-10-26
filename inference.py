@@ -87,6 +87,7 @@ def attribute_edit(generator, data):
 
     num_batch = len(data['target_image']) // bs + 1
     gt_images, video_warp_images, audio_warp_images, fake_images = [], [], [], []
+    cat_video = []
     source_3dmm = data['source_semantics'].unsqueeze(-1).repeat(1, 1, 27)  # 1, 73, 27
     for _i in range(num_batch):
         target_images = data['target_image'][_i * bs:(_i + 1) * bs]
@@ -120,14 +121,18 @@ def attribute_edit(generator, data):
              inversion_condition[1].expand(bs, 512, 64, 64))
         ]
 
-        gt_images.append(target_images)
-        fake_images.append(output['fake_image'].cpu().clamp_(-1, 1))
-        video_warp_images.append(output['video_warp_image'].cpu().clamp_(-1, 1))
+        # gt_images.append(target_images)
+        # fake_images.append(output['fake_image'].cpu().clamp_(-1, 1))
 
-    fake_images = torch.cat(fake_images, 0)
-    gt_images = torch.cat(gt_images, 0)
-    video_warp_images = torch.cat(video_warp_images, 0)
+        # video_warp_images.append(output['video_warp_image'].cpu().clamp_(-1, 1))
+        fake_image = ((output['fake_image'] + 1)/2.0 * 255.0).detach().cpu().clamp_(-1, 1).numpy().astype(np.uint8)
+        fake_image = np.transpose(fake_image, (0, 2, 3, 1))
+        fake_images.append(fake_image)
 
+    # fake_images = torch.cat(fake_images, 0)
+    # gt_images = torch.cat(gt_images, 0)
+    # video_warp_images = torch.cat(video_warp_images, 0)
+    fake_images = np.concatenate(fake_images, 2)
     video_util.write2video("{}/{}".format(args.output_dir, data['video_name']) + '_attribute_edit', fake_images)
 
 
