@@ -8,6 +8,7 @@ from utils.common import tensor2img
 from configs.config import Config
 from configs.path import PRETRAINED_MODELS_PATH
 from models.styleheat.styleheat import StyleHEAT
+import numpy as np
 
 
 def reenactment(generator, data):
