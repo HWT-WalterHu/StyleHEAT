@@ -31,7 +31,7 @@ def write2video(results_dir, image_array):
     else:
         out_name = results_dir + '.mp4'
 
-    _, height, width, layers = cat_video.shape
+    _, height, width, layers = image_array.shape
     size = (width, height)
     out = cv2.VideoWriter(out_name, cv2.VideoWriter_fourcc(*'mp4v'), 25, size)
 
