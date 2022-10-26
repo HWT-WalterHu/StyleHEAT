@@ -54,14 +54,16 @@ def reenactment(generator, data):
                 target_3dmm[:, 64:, :] = source_3dmm[:, 64:, :]
             output = generator.forward(source_image, target_3dmm, inv_data=inv_data, imsize=1024)
 
-        gt_images.append(target_images)
-        fake_images.append(output['fake_image'].cpu().clamp_(-1, 1))
-        video_warp_images.append(output['video_warp_image'].cpu().clamp_(-1, 1))
-
-    fake_images = torch.cat(fake_images, 0)
+        # gt_images.append(target_images)
+        # fake_images.append(output['fake_image'].cpu().clamp_(-1, 1))
+        # video_warp_images.append(output['video_warp_image'].cpu().clamp_(-1, 1))
+        fake_image = ((output['fake_image'] + 1)/2.0 * 255.0).detach().cpu().clamp_(-1, 1).numpy().astype(np.uint8)
+        fake_image = np.transpose(fake_image, (0, 2, 3, 1))
+        fake_images.append(fake_image)
+    # fake_images = torch.cat(fake_images, 0)
     # gt_images = torch.cat(gt_images, 0)
     # video_warp_images = torch.cat(video_warp_images, 0)
-
+    fake_images = np.concatenate(fake_images, 2)
     video_util.write2video("{}/{}".format(args.output_dir, data['video_name']), fake_images)
     print('Save video in {}/{}.mp4'.format(args.output_dir, data['video_name']))
 
@@ -121,18 +123,16 @@ def attribute_edit(generator, data):
              inversion_condition[1].expand(bs, 512, 64, 64))
         ]
 
-        # gt_images.append(target_images)
-        # fake_images.append(output['fake_image'].cpu().clamp_(-1, 1))
+        gt_images.append(target_images)
+        fake_images.append(output['fake_image'].cpu().clamp_(-1, 1))
 
-        # video_warp_images.append(output['video_warp_image'].cpu().clamp_(-1, 1))
-        fake_image = ((output['fake_image'] + 1)/2.0 * 255.0).detach().cpu().clamp_(-1, 1).numpy().astype(np.uint8)
-        fake_image = np.transpose(fake_image, (0, 2, 3, 1))
-        fake_images.append(fake_image)
+        video_warp_images.append(output['video_warp_image'].cpu().clamp_(-1, 1))
 
-    # fake_images = torch.cat(fake_images, 0)
-    # gt_images = torch.cat(gt_images, 0)
-    # video_warp_images = torch.cat(video_warp_images, 0)
-    fake_images = np.concatenate(fake_images, 2)
+
+    fake_images = torch.cat(fake_images, 0)
+    gt_images = torch.cat(gt_images, 0)
+    video_warp_images = torch.cat(video_warp_images, 0)
+
     video_util.write2video("{}/{}".format(args.output_dir, data['video_name']) + '_attribute_edit', fake_images)
 
 
