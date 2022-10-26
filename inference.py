@@ -58,7 +58,7 @@ def reenactment(generator, data):
         # gt_images.append(target_images)
         # fake_images.append(output['fake_image'].cpu().clamp_(-1, 1))
         # video_warp_images.append(output['video_warp_image'].cpu().clamp_(-1, 1))
-        fake_image = ((output['fake_image'] + 1)/2.0 * 255.0).detach().cpu().clamp_(-1, 1).numpy().astype(np.uint8)
+        fake_image = ((output['fake_image'].detach().clamp_(-1, 1) + 1)/2.0 * 255.0).cpu().numpy().astype(np.uint8)
         # output['fake_image'] shape is (BS, 3, 1024, 1024)
         fake_image = np.transpose(fake_image, (0, 2, 3, 1))
         fake_images.append(fake_image)
