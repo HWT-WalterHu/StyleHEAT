@@ -31,7 +31,7 @@ def reenactment(generator, data):
     num_batch = len(data['target_image']) // bs + 1
     gt_images, video_warp_images, audio_warp_images, fake_images = [], [], [], []
     source_3dmm = data['source_semantics'].unsqueeze(-1).repeat(1, 1, 27)  # 1, 73, 27
-    for _i in range(num_batch):
+    for _i in tqdm.tqdm(range(num_batch)):
         target_images = data['target_image'][_i * bs:(_i + 1) * bs]
         if len(target_images) == 0 or _i * bs > args.frame_limit:
             break
@@ -198,7 +198,7 @@ def main():
     generator = StyleHEAT(opt.model, PRETRAINED_MODELS_PATH).cuda()
     dataset = inference_util.build_inference_dataset(args, opt)
 
-    for _ in tqdm.tqdm(range(len(dataset))):
+    for _ in range(len(dataset)):
         data = dataset.load_next_video()
         if args.intuitive_edit:
             intuitive_edit(generator, data)
