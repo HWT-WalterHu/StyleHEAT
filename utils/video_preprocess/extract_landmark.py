@@ -1,7 +1,7 @@
 import face_alignment
 import numpy as np
 import torch
-from tqmd import tqdm
+from tqdm import tqdm
 
 detector = face_alignment.FaceAlignment(face_alignment.LandmarksType._2D)
 
