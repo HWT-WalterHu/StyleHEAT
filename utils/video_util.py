@@ -11,6 +11,7 @@ from PIL import Image, ImageFilter
 from scipy import ndimage
 from scipy.ndimage import gaussian_filter1d
 from skimage import io
+from tqdm import tqdm
 
 
 def write2video(results_dir, image_array):
@@ -108,7 +109,8 @@ def read_video(video_path, up_limit=None, resize=None):
     frames = []
     cap = cv2.VideoCapture(video_path)
     cnt = 0
-    while cap.isOpened():
+    # while cap.isOpened():
+    for i in tqdm(range(10000)):
         ret, frame = cap.read()
         if ret:
             frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)

@@ -8,6 +8,7 @@ import utils.video_util as video_util
 import numpy as np
 from PIL import Image
 import torch
+from tqdm import tqdm
 
 
 class ImageDataset:
@@ -89,7 +90,7 @@ class TempVideoDataset:
         # Hard code; Bad writing
         video_name = os.path.basename(video_path).split('.')[0]
         frames_pil = video_util.read_video(video_path, resize=256)
-
+        print('Done load frames.')
         save_3dmm_path = os.path.join(os.path.dirname(video_path), '3dmm', '3dmm_' + video_name + '.npy')
         if not os.path.exists(save_3dmm_path):
             os.makedirs(os.path.join(os.path.dirname(video_path), '3dmm'), exist_ok=True)
@@ -101,7 +102,7 @@ class TempVideoDataset:
             coeff_3dmm = self.model_3dmm.get_3dmm(frames_pil, lm_np)
             # print(coeff_3dmm.shape)
             np.save(save_3dmm_path, coeff_3dmm)
-
+        print('Done landmarks.')
         coeff_3dmm = np.load(save_3dmm_path, allow_pickle=True)
         coeff_3dmm = torch.from_numpy(coeff_3dmm)
 

@@ -1,7 +1,7 @@
 import face_alignment
 import numpy as np
 import torch
-
+from tqmd import tqdm
 
 detector = face_alignment.FaceAlignment(face_alignment.LandmarksType._2D)
 
@@ -87,7 +87,7 @@ def get_landmark(images):
     #         lm.append(detector.get_landmarks_from_image(np.array(images))[0])
     # else:
     lms_np = []
-    for image in images:
+    for image in tqdm(images):
         try:
             lm = detector.get_landmarks_from_image(np.array(image))[0]
             lms_np.append(lm)
